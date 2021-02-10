@@ -16,7 +16,7 @@ const Operator = () => {
   const [user, setUser] = useState({id: 100, name: 'admin'});
 
   const [messageText, setMessageText] = useState('');
-  const [room, setRoom] = useState({id: null, roomName: ''});
+  const [room, setRoom] = useState({id: null, roomName: '', isBot: null});
 
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -45,6 +45,10 @@ const Operator = () => {
         setMessages(messages => [ ...messages, message ]);
       // }
     });
+
+    socket.on('isBot', condi => {
+      setRoom(room => ({id: room.id, roomName: room.roomName, isBot: condi}))
+    });
 }, []);
 
 
@@ -71,7 +75,7 @@ const Operator = () => {
   return (
     <div className="operatorContainer">
       <Rooms rooms={rooms} atClick={fetchMessage}/>
-      <Chat messages={messages} user={user} messageText={messageText} setMessageText={setMessageText} sendMessage={sendMessage}/>
+      <Chat messages={messages} user={user} messageText={messageText} setMessageText={setMessageText} sendMessage={sendMessage} isBot={room.isBot}/>
     </div>
   )
 }
